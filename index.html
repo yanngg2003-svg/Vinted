@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mes lots</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1A1F26">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#EEF1F4;--card:#FFFFFF;--ink:#1A1F26;--mute:#667085;--line:#D9DEE5;--good:#177245;--bad:#B3342B;--wood:#D8B47A;--bar:#2F5D8A;--bar2:#177245;--track:#E4E8ED;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181D;--card:#1D232A;--ink:#EDF0F3;--mute:#9AA4B1;--line:#2C343D;--good:#4CC38A;--bad:#F0786E;--wood:#B8935A;--bar:#6FA3D6;--bar2:#4CC38A;--track:#2C343D;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14181D;--card:#1D232A;--ink:#EDF0F3;--mute:#9AA4B1;--line:#2C343D;--good:#4CC38A;--bad:#F0786E;--wood:#B8935A;--bar:#6FA3D6;--bar2:#4CC38A;--track:#2C343D;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.4}
+main{max-width:560px;margin:0 auto;padding:18px 14px 110px}
+h1{font-size:26px;font-weight:800;margin:6px 2px 14px;letter-spacing:-.02em}
+.board{background:var(--card);border:5px solid var(--wood);border-radius:6px;padding:16px}
+.net{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+.net small{display:block;font-size:13px;font-weight:600;color:var(--mute);letter-spacing:0;margin-bottom:4px}
+.g{color:var(--good)}.b{color:var(--bad)}
+.sum{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:14px}
+.sum span{display:block;color:var(--mute);font-size:12px}
+.sum b{font-weight:600;font-size:16px}
+.bar-row{display:flex;gap:6px;margin:16px 2px 10px}
+.bar-row button{flex:1;padding:9px 6px;border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:8px;font:inherit;font-size:14px;font-weight:600}
+.bar-row button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.lot{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px}
+.lot .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.nm{font-size:18px;font-weight:700}
+.pf{font-size:20px;font-weight:800;text-align:right;white-space:nowrap}
+.pf small{display:block;font-size:11px;font-weight:600;color:var(--mute)}
+.stats{display:flex;gap:16px;margin:8px 0 10px;font-size:13px;color:var(--mute)}
+.stats b{color:var(--ink);font-weight:600}
+.pr{display:grid;grid-template-columns:62px 1fr 48px;align-items:center;gap:8px;font-size:13px;color:var(--mute);margin-top:6px}
+.pr i{display:block;height:7px;background:var(--track);border-radius:4px;overflow:hidden}
+.pr i em{display:block;height:100%;background:var(--bar);border-radius:4px}
+.pr.s i em{background:var(--bar2)}
+.pr u{text-decoration:none;text-align:right;color:var(--ink);font-weight:600}
+.empty{padding:30px 10px;text-align:center;color:var(--mute)}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));padding:15px 22px;background:var(--ink);color:var(--bg);border:0;border-radius:30px;font:inherit;font-weight:700;font-size:16px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.ov.on{display:flex}
+.sheet{background:var(--card);width:100%;max-width:560px;max-height:92%;overflow:auto;border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+.sheet h2{margin:0 0 12px;font-size:20px}
+label{display:block;font-size:13px;color:var(--mute);margin:12px 0 4px;font-weight:600}
+input{width:100%;font:inherit;font-size:17px;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.step{display:grid;grid-template-columns:48px 1fr 48px;gap:6px}
+.step button{font:inherit;font-size:22px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px}
+.step input{text-align:center}
+.sale{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:6px}
+.btn{font:inherit;font-weight:700;font-size:16px;padding:12px 16px;border-radius:8px;border:1px solid var(--ink);background:var(--ink);color:var(--bg)}
+.btn.o{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.d{background:transparent;color:var(--bad);border-color:var(--line)}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.acts .d{grid-column:1/-1}
+.hint{font-size:12px;color:var(--mute);margin-top:4px}
+button:focus-visible,input:focus-visible{outline:3px solid var(--bar);outline-offset:2px}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+</style>
+</head>
+<body>
+<main>
+<h1>Mes lots</h1>
+<section class="board" id="sum"></section>
+<div class="bar-row" role="group" aria-label="Tri">
+<button id="s1" aria-pressed="true">Récents</button>
+<button id="s2" aria-pressed="false">Rentabilité</button>
+</div>
+<div id="list"></div>
+</main>
+<button class="fab" id="add">Nouveau lot</button>
+<div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
+
+<script>
+const KEY = "lots-v1";
+const SEED = [
+{id:"l6",name:"11 Tem",inv:47,n:9,rec:0,sold:0,ca:0},
+{id:"l5",name:"2e VG",inv:28,n:5,rec:5,sold:3,ca:54},
+{id:"l4",name:"Combi ski",inv:144,n:11,rec:6,sold:2,ca:46},
+{id:"l3",name:"11 Veste",inv:253,n:15,rec:9,sold:5,ca:79},
+{id:"l2",name:"10 Tem",inv:130.5,n:6,rec:6,sold:6,ca:182},
+{id:"l1",name:"1er Vide Grenier",inv:110,n:15,rec:15,sold:13,ca:217}
+];
+let lots = load(), sort = "recent", editId = null;
+
+function load(){
+  try { const s = localStorage.getItem(KEY); if (s) return JSON.parse(s); } catch(e){}
+  return SEED.map(x => ({...x}));
+}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(lots)); } catch(e){} }
+const $ = id => document.getElementById(id);
+window.addEventListener("error", ev => { const d = document.createElement("div"); d.style.cssText = "position:fixed;left:8px;right:8px;top:8px;z-index:99;background:#B3342B;color:#fff;padding:10px;border-radius:8px;font-size:13px"; d.textContent = "Erreur : " + ev.message; document.body.appendChild(d); });
+const eur = n => new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:2}).format(n);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num = v => { const x = parseFloat(String(v).replace(",",".")); return isFinite(x) ? x : 0; };
+const profit = l => l.ca - l.inv;
+const roi = l => l.inv ? profit(l) / l.inv * 100 : 0;
+
+function render(){
+  const inv = lots.reduce((a,l)=>a+l.inv,0), ca = lots.reduce((a,l)=>a+l.ca,0), net = ca - inv;
+  const toRecv = lots.reduce((a,l)=>a+(l.n-l.rec),0), stock = lots.reduce((a,l)=>a+(l.rec-l.sold),0);
+  $("sum").innerHTML =
+    `<div class="net ${net>=0?"g":"b"}"><small>${net>=0?"Bénéfice total":"Reste à récupérer au total"}</small>${net>0?"+":""}${eur(net)}</div>
+     <div class="sum"><div><span>Investi</span><b>${eur(inv)}</b></div><div><span>Chiffre d’affaires</span><b>${eur(ca)}</b></div>
+     <div><span>Pièces à recevoir</span><b>${toRecv}</b></div><div><span>En stock à vendre</span><b>${stock}</b></div></div>`;
+  const arr = lots.slice();
+  if (sort === "roi") arr.sort((a,b)=>roi(b)-roi(a));
+  $("list").innerHTML = arr.length ? arr.map(card).join("") : `<div class="empty">Aucun lot. Ajoute ton premier lot avec le bouton en bas.</div>`;
+  $("s1").setAttribute("aria-pressed", sort==="recent");
+  $("s2").setAttribute("aria-pressed", sort==="roi");
+}
+function bar(label, v, n, cls){
+  const p = n ? Math.min(100, v/n*100) : 0;
+  return `<div class="pr ${cls}">${label}<i><em style="width:${p}%"></em></i><u>${v}/${n}</u></div>`;
+}
+function card(l){
+  const p = profit(l);
+  return `<button class="lot" data-id="${l.id}">
+    <div class="top"><span class="nm">${esc(l.name)}</span>
+    <span class="pf ${p>=0?"g":"b"}">${p>0?"+":""}${eur(p)}<small>${p>=0?"bénéfice":"reste à récupérer"}</small></span></div>
+    <div class="stats"><span>Investi <b>${eur(l.inv)}</b></span><span>Encaissé <b>${eur(l.ca)}</b></span><span>ROI <b>${Math.round(roi(l))} %</b></span></div>
+    ${bar("Reçues", l.rec, l.n, "")}${bar("Vendues", l.sold, l.n, "s")}
+  </button>`;
+}
+
+function openSheet(id){
+  editId = id;
+  const l = id ? lots.find(x=>x.id===id) : {name:"",inv:"",n:"",rec:0,sold:0,ca:0};
+  $("sheet").innerHTML = `
+    <h2>${id ? "Modifier le lot" : "Nouveau lot"}</h2>
+    <label for="f-name">Nom du lot</label><input id="f-name" value="${esc(l.name)}" placeholder="Ex : Lot vestes">
+    <div class="two">
+      <div><label for="f-inv">Investi (€)</label><input id="f-inv" inputmode="decimal" value="${l.inv}"></div>
+      <div><label for="f-n">Nombre de pièces</label><input id="f-n" inputmode="numeric" value="${l.n}"></div>
+    </div>
+    <label for="f-rec">Pièces reçues</label>
+    <div class="step"><button data-st="f-rec" data-d="-1" aria-label="Moins">−</button><input id="f-rec" inputmode="numeric" value="${l.rec}"><button data-st="f-rec" data-d="1" aria-label="Plus">+</button></div>
+    <label for="f-sold">Pièces vendues</label>
+    <div class="step"><button data-st="f-sold" data-d="-1" aria-label="Moins">−</button><input id="f-sold" inputmode="numeric" value="${l.sold}"><button data-st="f-sold" data-d="1" aria-label="Plus">+</button></div>
+    <label for="f-ca">Chiffre d’affaires (€)</label><input id="f-ca" inputmode="decimal" value="${l.ca}">
+    <label for="f-sale">Enregistrer une vente</label>
+    <div class="sale"><input id="f-sale" inputmode="decimal" placeholder="Prix de vente (€)"><button class="btn o" id="f-addsale">Ajouter</button></div>
+    <div class="hint">Ajoute 1 pièce vendue et le prix au chiffre d’affaires.</div>
+    <div class="acts"><button class="btn o" id="f-cancel">Annuler</button><button class="btn" id="f-save">Enregistrer</button>
+    ${id ? `<button class="btn d" id="f-del">Supprimer ce lot</button>` : ""}</div>`;
+  $("ov").classList.add("on");
+}
+function closeSheet(){ try { document.activeElement && document.activeElement.blur(); } catch(e){} $("ov").classList.remove("on"); editId = null; window.scrollTo(0,0); }
+
+$("sheet").addEventListener("click", e => {
+  const t = e.target.closest("button"); if (!t) return;
+  if (t.dataset.st) { const i = $(t.dataset.st); i.value = Math.max(0, Math.round(num(i.value)) + Number(t.dataset.d)); return; }
+  if (t.id === "f-addsale") {
+    const p = num($("f-sale").value); if (p <= 0) { $("f-sale").focus(); return; }
+    $("f-sold").value = Math.round(num($("f-sold").value)) + 1;
+    $("f-ca").value = Math.round((num($("f-ca").value) + p) * 100) / 100;
+    $("f-sale").value = ""; $("f-sale").blur(); return;
+  }
+  if (t.id === "f-cancel") return closeSheet();
+  if (t.id === "f-del") { if (!t.dataset.arm) { t.dataset.arm = "1"; t.textContent = "Confirmer la suppression"; return; } lots = lots.filter(x=>x.id!==editId); save(); closeSheet(); render(); return; }
+  if (t.id === "f-save") {
+    const n = Math.max(0, Math.round(num($("f-n").value)));
+    const rec = Math.min(n, Math.max(0, Math.round(num($("f-rec").value))));
+    const sold = Math.min(rec, Math.max(0, Math.round(num($("f-sold").value))));
+    const data = { name: $("f-name").value.trim() || "Lot sans nom", inv: num($("f-inv").value), n, rec, sold, ca: num($("f-ca").value) };
+    if (editId) Object.assign(lots.find(x=>x.id===editId), data);
+    else lots.unshift({ id: "l" + Date.now(), ...data });
+    save(); closeSheet(); render();
+  }
+});
+$("ov").addEventListener("click", e => { if (e.target === $("ov")) closeSheet(); });
+$("list").addEventListener("click", e => { const b = e.target.closest(".lot"); if (b) openSheet(b.dataset.id); });
+$("add").addEventListener("click", () => openSheet(null));
+$("s1").addEventListener("click", () => { sort = "recent"; render(); });
+$("s2").addEventListener("click", () => { sort = "roi"; render(); });
+render();
+if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").catch(function(){}); }
+</script>
+</body>
+</html>
